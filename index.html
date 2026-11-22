@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Last Chance</title>
+
+<!-- Favicon (Flame Logo in URL) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='25 25 150 150'%3E%3Ccircle cx='100' cy='100' r='85' fill='%23050505' stroke='%23FFFFFF' stroke-width='4'/%3E%3Cpath d='M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z' fill='%23FF5722'/%3E%3Cpath d='M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z' fill='%23FFC107'/%3E%3Cpath d='M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z' fill='%23FFFFFF'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cairo+Play:wght@500&family=Hind+Madurai:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     BASE STYLES & BACKGROUND
+  ============================================================ */
+  :root {
+    --maroon: #420B0B; 
+    --gold: #C9A227;
+    --gold-2: #E5C76A;
+    --cream: #FFF8E7;
+    --white: #FFFFFF;
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-english: 'Cairo Play', cursive, system-ui, sans-serif; 
+    --font-tamil: 'Hind Madurai', sans-serif;
+    --font-logo: 'Cairo Play', cursive, system-ui, sans-serif;
+    --font-description: 'Roboto', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--maroon);
+    background-image: radial-gradient(circle, rgba(201, 162, 39, 0.25) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
+    background-position: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, var(--cream) 0%, var(--gold-2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+    padding-right: 8px; 
+    padding-bottom: 4px;
+  }
+
+  /* ============================================================
+     INTRO ANIMATION SEQUENCE
+  ============================================================ */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: #000000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fade-out-overlay 1s ease-in-out 5.5s forwards;
+  }
+
+  .intro-logo {
+    width: 85px;
+    height: 85px;
+    opacity: 0;
+    transform: scale(0);
+    animation: ignite 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) 3s forwards;
+  }
+
+  @keyframes ignite {
+    0% { transform: scale(0); opacity: 0; filter: brightness(5) drop-shadow(0 0 30px #FF5722); }
+    30% { transform: scale(0.2); opacity: 1; filter: brightness(3) drop-shadow(0 0 20px #FF9800); }
+    100% { transform: scale(1); opacity: 1; filter: brightness(1) drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+  }
+
+  @keyframes fade-out-overlay {
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  /* ============================================================
+     MAIN CONTENT
+  ============================================================ */
+  .main-content {
+    opacity: 0;
+    animation: reveal-content 1.5s ease-in 5.5s forwards;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh; 
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+  }
+
+  @keyframes reveal-content {
+    to { opacity: 1; }
+  }
+
+  /* ============================================================
+     HERO LOGO & TEXT CONTAINER
+  ============================================================ */
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    text-align: center;
+    width: 100%;
+    max-width: 900px;
+    flex-grow: 1;
+  }
+
+  .logo-mark-svg {
+    width: 85px;
+    height: 85px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  }
+
+  .logo-text {
+    font-family: var(--font-logo);
+    font-size: 3.5rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  
+  .logo-text em {
+    font-style: italic;
+  }
+
+  /* ============================================================
+     MAIN TAGLINE TYPING SECTION
+  ============================================================ */
+  .tagline-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 3rem;
+    width: 100%;
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .typing-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  .typed-text {
+    transition: font-family 0.3s ease;
+    line-height: 1.4;
+  }
+
+  .typed-text.tamil {
+    font-family: var(--font-tamil);
+    font-size: 1.2rem;
+    font-weight: 700; 
+    font-style: italic; 
+    color: var(--gold-2);
+  }
+
+  .typed-text.english {
+    font-family: var(--font-english);
+    font-size: 40px; 
+    font-weight: 500; 
+    color: var(--white); 
+  }
+
+  /* Main Cursor */
+  .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.3em;
+    margin-left: 4px;
+    background-color: var(--gold-2);
+    animation: blink 0.8s step-end infinite;
+  }
+
+  .typed-text.tamil + .cursor {
+    background-color: var(--gold-2);
+    height: 1.4em;
+  }
+
+  .typed-text.english + .cursor {
+    background-color: var(--white);
+    height: 1.2em;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ============================================================
+     PURPOSE TYPING SECTION
+  ============================================================ */
+  .purpose-container {
+    width: 100%;
+    max-width: 750px;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    text-align: left; 
+  }
+
+  .purpose-title {
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    min-height: 1.8rem;
+    width: 100%;
+    text-align: left;
+  }
+
+  .purpose-title.tamil {
+    font-family: var(--font-tamil);
+    font-size: 1.3rem;
+    color: var(--gold-2);
+    font-weight: 700; 
+  }
+
+  .purpose-title.english {
+    font-family: var(--font-english);
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    color: var(--gold-2); 
+  }
+
+  .purpose-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    min-height: 6rem; 
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    width: 100%;
+  }
+
+  .purpose-text.tamil {
+    font-family: var(--font-description);
+    font-weight: 400;
+    color: var(--white); 
+  }
+
+  .purpose-text.english {
+    font-family: var(--font-description);
+    font-weight: 400;
+    color: var(--white); 
+    font-size: 1.1rem; 
+    line-height: 1.5;
+  }
+
+  /* ============================================================
+     PROJECTS SECTION
+  ============================================================ */
+  .projects-section {
+    width: 100%;
+    max-width: 900px;
+    margin-top: 6rem;
+    padding-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .projects-header {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .projects-title {
+    font-family: var(--font-logo);
+    font-size: 3rem;
+    font-weight: 500;
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.02em;
+  }
+
+  .projects-title em {
+    font-style: italic;
+  }
+
+  .projects-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,162,39,0.6), transparent);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .project-card {
+    background: var(--gold-2); 
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+    text-decoration: none; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--maroon); 
+  }
+
+  .project-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--maroon);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    background: #F2D782; 
+  }
+
+  .project-card h3 {
+    font-family: var(--font-english);
+    font-size: 1.4rem;
+    color: var(--maroon);
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+  }
+
+  .project-card > p:not(.project-desc) {
+    font-family: var(--font-english);
+    font-size: 1rem;
+    color: #6B1414; 
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .project-desc {
+    font-family: var(--font-english);
+    font-size: 0.85rem;
+    color: #551010;
+    margin-top: 1.2rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  /* ============================================================
+     CONTACT & DONATION SECTIONS
+  ============================================================ */
+  .contact-section, .donation-section {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2.5rem;
+    background: rgba(255, 248, 231, 0.03);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    border-radius: 16px;
+    box-sizing: border-box;
+  }
+
+  .section-title {
+    font-family: var(--font-logo);
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin: 0 0 1rem 0;
+  }
+
+  .contact-text, .donation-text {
+    font-family: var(--font-description);
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--cream);
+    margin: 0;
+  }
+
+  .contact-text a {
+    color: var(--gold-2);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .contact-text a:hover {
+    color: var(--white);
+    text-decoration: underline;
+  }
+
+  .donate-btn {
+    margin-top: 1.5rem;
+    padding: 14px 40px;
+    background: var(--gold-2);
+    color: var(--maroon);
+    border: none;
+    border-radius: 50px;
+    font-family: var(--font-english);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
+  }
+
+  .donate-btn:hover {
+    background: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(201, 162, 39, 0.4);
+  }
+
+  /* ============================================================
+     MODAL FOR DONATION QR
+  ============================================================ */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 10000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: var(--cream);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    animation: popIn 0.3s ease-out;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: var(--maroon);
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .close-btn:hover {
+    color: #ff6b6b;
+  }
+
+  .modal-content h3 {
+    font-family: var(--font-english);
+    color: var(--maroon);
+    margin-top: 0;
+    font-size: 1.6rem;
+  }
+
+  .qr-image {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 12px;
+    margin: 1rem auto;
+    display: block;
+    border: 4px solid var(--gold-2);
+  }
+
+  .qr-error-msg {
+    display: none;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: var(--font-description);
+    font-size: 0.9rem;
+    margin: 1rem 0;
+    text-align: left;
+  }
+
+  .upi-id {
+    font-family: var(--font-description);
+    color: var(--maroon);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+    background: rgba(201, 162, 39, 0.2);
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  /* ============================================================
+     RESPONSIVE ADJUSTMENTS
+  ============================================================ */
+  @media (max-width: 768px) {
+    .logo-text { font-size: 2.8rem; }
+    .typed-text.tamil { font-size: 1rem; }
+    .typed-text.english { font-size: 1.8rem; } 
+    .purpose-title { font-size: 1.1rem; }
+    .purpose-text { font-size: 0.95rem; }
+    
+    .projects-title { font-size: 2.5rem; }
+    .projects-section { margin-top: 4rem; }
+    
+    .contact-section, .donation-section { padding: 1.5rem; }
+  }
+
+  @media (max-width: 480px) {
+    .logo-text { font-size: 2.2rem; }
+    .logo-mark-svg { width: 65px; height: 65px; }
+    .typed-text.tamil { font-size: 0.9rem; }
+    .typed-text.english { font-size: 1.4rem; } 
+    .purpose-title { font-size: 1rem; }
+    .purpose-text { font-size: 0.9rem; min-height: 8rem; }
+    
+    .projects-grid { grid-template-columns: 1fr; }
+    .projects-title { font-size: 2rem; }
+    
+    .section-title { font-size: 1.8rem; }
+    .contact-text, .donation-text { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- 1. INTRO OVERLAY -->
+  <div class="intro-overlay">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="intro-logo" aria-hidden="true">
+      <defs>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+        <linearGradient id="fire-outer" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#B71C1C" />
+          <stop offset="50%" stop-color="#FF5722" />
+          <stop offset="100%" stop-color="#FF9800" />
+        </linearGradient>
+        <linearGradient id="fire-mid" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#FF5722" />
+          <stop offset="60%" stop-color="#FFC107" />
+          <stop offset="100%" stop-color="#FFEB3B" />
+        </linearGradient>
+        <linearGradient id="fire-inner" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#FFC107" />
+          <stop offset="50%" stop-color="#FFF59D" />
+          <stop offset="100%" stop-color="#FFFFFF" />
+        </linearGradient>
+        <style>
+          @keyframes flicker-outer { 0% { transform: scale(1, 1); } 100% { transform: scale(1.03, 1.06); } }
+          @keyframes flicker-mid { 0% { transform: scale(1, 1); } 100% { transform: scale(1.06, 1.1); } }
+          @keyframes flicker-inner { 0% { transform: scale(1, 1); opacity: 0.85; } 100% { transform: scale(1.1, 1.15); opacity: 1; } }
+          @keyframes pulse-glow { 0% { opacity: 0.3; transform: scale(1); } 100% { opacity: 0.7; transform: scale(1.1); } }
+          .flame-outer { transform-origin: 100px 165px; animation: flicker-outer 1.2s infinite alternate ease-in-out; }
+          .flame-mid { transform-origin: 100px 160px; animation: flicker-mid 0.9s infinite alternate ease-in-out; }
+          .flame-inner { transform-origin: 100px 152px; animation: flicker-inner 0.6s infinite alternate ease-in-out; }
+          .glow-bg { transform-origin: 100px 100px; animation: pulse-glow 1.5s infinite alternate ease-in-out; }
+        </style>
+      </defs>
+      <circle cx="100" cy="100" r="85" fill="#050505" stroke="#FFFFFF" stroke-width="2" />
+      <circle cx="100" cy="100" r="60" fill="#FF5722" opacity="0.5" filter="url(#glow)" class="glow-bg" />
+      <path class="flame-outer" d="M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z" fill="url(#fire-outer)" filter="url(#glow)"/>
+      <path class="flame-mid" d="M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z" fill="url(#fire-mid)" />
+      <path class="flame-inner" d="M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z" fill="url(#fire-inner)" />
+    </svg>
+  </div>
+
+  <!-- 2. MAIN CONTENT WRAPPER -->
+  <div class="main-content">
+    
+    <!-- Hero Logo Area -->
+    <div class="logo-container">
+      
+      <!-- Main Logo SVG -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="logo-mark-svg" aria-hidden="true">
+        <circle cx="100" cy="100" r="85" fill="#050505" stroke="#FFFFFF" stroke-width="2" />
+        <circle cx="100" cy="100" r="60" fill="#FF5722" opacity="0.5" filter="url(#glow)" class="glow-bg" />
+        <path class="flame-outer" d="M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z" fill="url(#fire-outer)" filter="url(#glow)"/>
+        <path class="flame-mid" d="M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z" fill="url(#fire-mid)" />
+        <path class="flame-inner" d="M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z" fill="url(#fire-inner)" />
+      </svg>
+      
+      <!-- Main Logo Text -->
+      <span class="logo-text gradient-text">Last Chance</span>
+
+      <!-- Alternating Typing Tagline -->
+      <div class="tagline-container">
+        <div class="typing-wrapper">
+          <span class="typed-text"></span>
+          <span class="cursor"></span>
+        </div>
+      </div>
+
+      <!-- Purpose Section -->
+      <div class="purpose-container">
+        <div class="purpose-title"></div>
+        <div class="purpose-text"></div>
+      </div>
+
+    </div>
+
+    <!-- 3. PROJECTS SECTION -->
+    <div class="projects-section">
+      <div class="projects-header">
+        <h2 class="projects-title gradient-text">Our Projects</h2>
+        <div class="projects-divider"></div>
+      </div>
+      
+      <!-- Dynamic Grid Container -->
+      <div class="projects-grid" id="projectsGrid">
+        <!-- Default Project One Link (Always shown) -->
+        <a href="https://arunkumar-2004-bit.github.io/Advance-Search/search.html" target="_blank" class="project-card">
+          <h3>Target the Web</h3>
+          <p>Advanced Search</p>
+          <p class="project-desc">This application uses Google Dorking techniques to perform targeted web searches. It filters results using advanced search operators to display specific content aligned precisely with the user's input data.</p>
+        </a>
+        
+        <!-- Dynamic Projects will be injected here by JavaScript -->
+      </div>
+    </div>
+
+    <!-- 4. CONTACT SECTION -->
+    <div class="contact-section">
+      <h2 class="section-title gradient-text">Contact Us</h2>
+      <p class="contact-text">
+        Contact <a href="mailto:Last_chance@outlook.in">Last_chance@outlook.in</a> and <a href="mailto:p.arunkumar200444@gmail.com">p.arunkumar200444@gmail.com</a> for any queries related to the applications; websites; and also give suggestions for the enhancement of the projects.
+      </p>
+    </div>
+
+    <!-- 5. DONATION SECTION -->
+    <div class="donation-section">
+      <h2 class="section-title gradient-text">Support Our Work</h2>
+      <p class="donation-text">If you find our projects helpful and would like to support us, consider making a donation.</p>
+      <button class="donate-btn" id="openDonateBtn">Donate Now</button>
+    </div>
+
+  </div>
+
+  <!-- 6. DONATION MODAL -->
+  <div class="modal" id="donateModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeDonateBtn">&times;</span>
+      <h3>Scan to Donate</h3>
+      
+      <!-- QR Image with Error Fallback -->
+      <img src="qr.jpeg" alt="UPI QR Code" class="qr-image" id="qrImage">
+      
+      <!-- Error Message (Hidden by default, shown if image fails to load) -->
+      <div id="qrError" class="qr-error-msg">
+        <strong>Image not found!</strong><br><br>
+        Please ensure the image file is named exactly <code>upi-qr.jpg</code> and is located in the <strong>same folder</strong> as this HTML file. If your image is a <code>.png</code>, rename the file or update the <code>src</code> in the code.
+      </div>
+
+      <p class="upi-id">UPI ID: seenuvasanmurugesan1935@oksbi</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // =========================================================
+      // 1. LOAD DYNAMIC PROJECTS FROM LOCAL STORAGE
+      // =========================================================
+      const projectsGrid = document.getElementById('projectsGrid');
+      let savedProjects = JSON.parse(localStorage.getItem('creativeAtomProjects')) || [];
+
+      savedProjects.forEach(project => {
+        const card = document.createElement('a');
+        card.href = project.url || '#';
+        card.target = '_blank';
+        card.className = 'project-card';
+        
+        if (!project.url && project.files && project.files.length > 0) {
+          card.href = '#';
+          card.style.cursor = 'default';
+          card.onclick = (e) => e.preventDefault();
+        }
+        
+        card.innerHTML = `
+          <h3>${project.name}</h3>
+          <p>${project.subtitle}</p>
+          <p class="project-desc">${project.desc}</p>
+        `;
+        
+        projectsGrid.appendChild(card);
+      });
+
+      if (savedProjects.length === 0) {
+        projectsGrid.innerHTML += `
+          <div class="project-card" style="cursor:default;">
+            <h3>Project Two</h3>
+            <p>Coming Soon...</p>
+          </div>
+          <div class="project-card" style="cursor:default;">
+            <h3>Project Three</h3>
+            <p>Coming Soon...</p>
+          </div>
+        `;
+      }
+
+      // =========================================================
+      // 2. TAGLINE TYPING ANIMATION
+      // =========================================================
+      const typedTextSpan = document.querySelector(".typed-text");
+      const taglines = [
+        { text: "எளிமையே மகத்துவத்தின் திறவுகோல்!", className: "tamil" },
+        { text: "The Goal of achieving greatness through simplicity", className: "english" }
+      ];
+      let taglineIndex = 0;
+      let taglineCharIndex = 0;
+
+      function typeTagline() {
+        const currentItem = taglines[taglineIndex];
+        typedTextSpan.className = `typed-text ${currentItem.className}`;
+        typedTextSpan.textContent = currentItem.text.substring(0, taglineCharIndex + 1);
+        taglineCharIndex++;
+
+        if (taglineCharIndex === currentItem.text.length) {
+          setTimeout(eraseTagline, 2500);
+        } else {
+          setTimeout(typeTagline, 75);
+        }
+      }
+
+      function eraseTagline() {
+        const currentItem = taglines[taglineIndex];
+        typedTextSpan.textContent = currentItem.text.substring(0, taglineCharIndex - 1);
+        taglineCharIndex--;
+
+        if (taglineCharIndex === 0) {
+          taglineIndex = (taglineIndex + 1) % taglines.length;
+          setTimeout(typeTagline, 500);
+        } else {
+          setTimeout(eraseTagline, 30);
+        }
+      }
+
+      // =========================================================
+      // 3. PURPOSE TYPING ANIMATION
+      // =========================================================
+      const purposeTitleEl = document.querySelector(".purpose-title");
+      const purposeTextEl = document.querySelector(".purpose-text");
+      
+      const purposes = [
+        {
+          title: "நோக்கம்:",
+          text: "அதிக செலவுமிக்க மற்றும் சிக்கலான தொழில்நுட்பங்களை மக்கள் எளிதாகவும், மிகக் குறைந்த செலவிலும், சிறந்த தரத்துடனும் பயன்படுத்துவதற்குத் தேவையான செயலி (Application) தீர்வுகளை உருவாக்குவதே எங்கள் நோக்கமாகும்.",
+          lang: "tamil"
+        },
+        {
+          title: "Purpose:",
+          text: "Our aim is to develop applications that help people utilize complex and high-cost tools easily, at a very low cost and with high quality.",
+          lang: "english"
+        }
+      ];
+
+      const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+      async function runPurposeAnimation() {
+        while (true) {
+          for (let item of purposes) {
+            purposeTitleEl.className = `purpose-title ${item.lang}`;
+            purposeTextEl.className = `purpose-text ${item.lang}`;
+            
+            purposeTitleEl.textContent = "";
+            purposeTextEl.textContent = "";
+
+            for (let i = 0; i < item.title.length; i++) {
+              purposeTitleEl.textContent += item.title[i];
+              await sleep(200);
+            }
+            
+            await sleep(600);
+
+            for (let i = 0; i < item.text.length; i++) {
+              purposeTextEl.textContent += item.text[i];
+              await sleep(25); 
+            }
+
+            await sleep(5000);
+
+            purposeTitleEl.textContent = "";
+            purposeTextEl.textContent = "";
+            await sleep(1200);
+          }
+        }
+      }
+
+      // =========================================================
+      // 4. DONATION MODAL LOGIC & IMAGE ERROR HANDLING
+      // =========================================================
+      const modal = document.getElementById("donateModal");
+      const openBtn = document.getElementById("openDonateBtn");
+      const closeBtn = document.getElementById("closeDonateBtn");
+      const qrImage = document.getElementById("qrImage");
+      const qrError = document.getElementById("qrError");
+
+      // Handle image loading error
+      qrImage.addEventListener("error", () => {
+        qrImage.style.display = "none"; // Hide the broken image icon
+        qrError.style.display = "block"; // Show the error message
+      });
+
+      openBtn.addEventListener("click", () => {
+        modal.style.display = "flex";
+      });
+
+      closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+
+      setTimeout(typeTagline, 6500);
+      setTimeout(runPurposeAnimation, 6500);
+    });
+  </script>
+</body>
+</html>
