@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="format-detection" content="telephone=no"> <!-- Prevents auto-coloring of numbers -->
 <title>Last Chance</title>
 
 <!-- Favicon (Flame Logo in URL) -->
@@ -325,11 +326,16 @@
     background: #F2D782; 
   }
 
-  /* Force all text inside card to be the same brown color */
+  /* BULLETPROOF FIX FOR COLOR INCONSISTENCIES */
   .project-card h3, 
-  .project-card > p, 
-  .project-card .project-desc {
+  .project-card p, 
+  .project-card .project-desc,
+  .project-card span {
     color: var(--maroon) !important;
+    -webkit-text-fill-color: var(--maroon) !important; /* Forces browser to ignore auto-styling */
+    background: transparent !important;
+    -webkit-background-clip: unset !important;
+    text-shadow: none !important;
   }
 
   .project-card h3 {
@@ -669,7 +675,7 @@
       <!-- Error Message (Hidden by default, shown if image fails to load) -->
       <div id="qrError" class="qr-error-msg">
         <strong>Image not found!</strong><br><br>
-        Please ensure the image file is named exactly <code>qr.jpeg</code> and is located in the <strong>same folder</strong> as this HTML file. If your image is a <code>.png</code>, rename the file or update the <code>src</code> in the code.
+        Please ensure the image file is named exactly <code>qr.jpeg</code> and is located in the <strong>same folder</strong> as this HTML file.
       </div>
 
       <p class="upi-id">UPI ID: seenuvasanmurugesan1935@oksbi</p>
@@ -685,7 +691,7 @@
       const projectsGrid = document.getElementById('projectsGrid');
       
       const DB_NAME = 'LastChanceProjectsDB';
-      const DB_VERSION = 2; // Must match the version in the upload page
+      const DB_VERSION = 2; 
       const STORE_NAME = 'projects';
 
       function openDB() {
@@ -731,17 +737,16 @@
               card.style.cursor = 'default';
             }
 
-            // No attached files rendered, just the text content
+            // Force inline styles to guarantee the color cannot be overridden by browser auto-formatting
             card.innerHTML = `
-              <h3>${escapeHtml(project.name)}</h3>
-              <p>${escapeHtml(project.subtitle)}</p>
-              <p class="project-desc">${escapeHtml(project.desc)}</p>
+              <h3 style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.name)}</h3>
+              <p style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.subtitle)}</p>
+              <p class="project-desc" style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.desc)}</p>
             `;
             
             projectsGrid.appendChild(card);
           });
         } else {
-          // Fallbacks if no projects are found in IndexedDB
           projectsGrid.innerHTML += `
             <div class="project-card" style="cursor:default;">
               <h3>Project Two</h3>
