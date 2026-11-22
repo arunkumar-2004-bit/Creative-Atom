@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="format-detection" content="telephone=no"> <!-- Stops browser auto-coloring -->
 <title>Last Chance | Upload Projects</title>
 
-<!-- Favicon (Flame Logo in URL) -->
+<!-- Favicon -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='25 25 150 150'%3E%3Ccircle cx='100' cy='100' r='85' fill='%23050505' stroke='%23FFFFFF' stroke-width='4'/%3E%3Cpath d='M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z' fill='%23FF5722'/%3E%3Cpath d='M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z' fill='%23FFC107'/%3E%3Cpath d='M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z' fill='%23FFFFFF'/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cairo+Play:wght@500&family=Hind+Madurai:wght@400;500;700&display=swap" rel="stylesheet" />
+<!-- Added Roboto 400 for the cards -->
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cairo+Play:wght@500&family=Hind+Madurai:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
   :root {
@@ -45,19 +45,8 @@
     box-sizing: border-box;
   }
 
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    margin-bottom: 4rem;
-  }
-
-  .header svg {
-    width: 65px;
-    height: 65px;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
-  }
+  .header { display: flex; align-items: center; justify-content: center; gap: 1.5rem; margin-bottom: 4rem; }
+  .header svg { width: 65px; height: 65px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
 
   .gradient-text {
     background: linear-gradient(90deg, var(--cream) 0%, var(--gold-2) 100%);
@@ -82,21 +71,9 @@
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
   }
 
-  .upload-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .form-group.full-width {
-    grid-column: 1 / -1;
-  }
+  .upload-form { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.8rem; }
+  .form-group.full-width { grid-column: 1 / -1; }
 
   .form-group label {
     font-family: var(--font-english);
@@ -121,21 +98,9 @@
     box-sizing: border-box;
   }
 
-  .form-group input:focus, 
-  .form-group textarea:focus {
-    border-color: var(--gold-2);
-    background: rgba(0,0,0,0.4);
-  }
-
-  .form-group input::placeholder, 
-  .form-group textarea::placeholder {
-    color: rgba(255, 248, 231, 0.4);
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--gold-2); background: rgba(0,0,0,0.4); }
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255, 248, 231, 0.4); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
 
   .submit-btn {
     grid-column: 1 / -1;
@@ -151,43 +116,18 @@
     transition: all 0.3s ease;
     margin-top: 1rem;
   }
+  .submit-btn:hover { background: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201,162,39,0.3); }
 
-  .submit-btn:hover {
-    background: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(201,162,39,0.3);
-  }
+  .projects-header { text-align: center; margin-bottom: 3rem; }
+  .projects-title { font-family: var(--font-logo); font-size: 3rem; font-weight: 500; margin: 0 0 1rem 0; letter-spacing: -0.02em; }
+  .projects-divider { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(201,162,39,0.6), transparent); margin-bottom: 3rem; }
 
-  .projects-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; width: 100%; }
 
-  .projects-title {
-    font-family: var(--font-logo);
-    font-size: 3rem;
-    font-weight: 500;
-    margin: 0 0 1rem 0;
-    letter-spacing: -0.02em;
-  }
-
-  .projects-divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(201,162,39,0.6), transparent);
-    margin-bottom: 3rem;
-  }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    width: 100%;
-  }
-
+  /* UPDATED PROJECT CARD STYLE TO MATCH INDEX.HTML */
   .project-card {
-    background: rgba(255, 248, 231, 0.03);
-    border: 1px solid rgba(201,162,39,0.25);
+    background: var(--gold-2);
+    border: 1px solid var(--gold);
     border-radius: 12px;
     padding: 2rem 1.5rem;
     text-align: center;
@@ -197,85 +137,51 @@
     justify-content: space-between;
     min-height: 250px;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .delete-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid rgba(255, 107, 107, 0.3);
-    color: #ff6b6b;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute; top: 15px; right: 15px; background: rgba(255, 107, 107, 0.1);
+    border: 1px solid rgba(255, 107, 107, 0.3); color: #ff6b6b; border-radius: 50%;
+    width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .delete-btn:hover { background: #ff6b6b; color: var(--white); }
+
+  /* Force all text inside card to be the same brown color and use Roboto */
+  .project-card h3, 
+  .project-card p, 
+  .project-card span,
+  .project-card div {
+    font-family: 'Roboto', sans-serif !important;
+    color: var(--maroon) !important;
   }
 
-  .delete-btn:hover {
-    background: #ff6b6b;
-    color: var(--white);
-  }
+  .project-card h3 { font-size: 1.4rem; font-weight: 700; margin: 0 0 0.5rem 0; }
+  .project-card .subtitle { font-size: 1rem; font-weight: 400; margin: 0; }
+  .project-desc { font-size: 0.9rem; font-weight: 400; margin-top: 1rem; line-height: 1.6; flex-grow: 1; }
 
-  .project-card h3 {
-    font-family: var(--font-english);
-    font-size: 1.4rem;
-    color: var(--cream);
-    margin: 0 0 0.5rem 0;
-    font-weight: 500;
-  }
-
-  .project-card .subtitle {
-    font-family: var(--font-tamil);
-    font-size: 0.95rem;
-    color: var(--gold-2);
-    margin: 0;
-    font-weight: 500;
-  }
-
-  .project-desc {
-    font-family: var(--font-english);
-    font-size: 0.85rem;
-    color: rgba(255, 248, 231, 0.6);
-    margin-top: 1rem;
-    line-height: 1.6;
-    text-align: center;
-    flex-grow: 1;
-  }
-
+  /* Updated View button to match the brown theme */
   .view-btn {
     margin-top: 1.5rem;
     padding: 10px 24px;
     background: transparent;
-    border: 1px solid var(--gold-2);
-    color: var(--gold-2);
+    border: 1px solid var(--maroon);
+    color: var(--maroon);
     border-radius: 50px;
     text-decoration: none;
-    font-family: var(--font-english);
+    font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     width: 100%;
     box-sizing: border-box;
     display: inline-block;
+    transition: all 0.3s ease;
   }
+  .view-btn:hover { background: var(--maroon); color: var(--gold-2); }
 
-  .view-btn:hover {
-    background: var(--gold-2);
-    color: var(--maroon);
-  }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 4rem 0;
-    color: rgba(255, 248, 231, 0.5);
-    font-family: var(--font-english);
-    font-size: 1.1rem;
-  }
+  .empty-state { grid-column: 1 / -1; text-align: center; padding: 4rem 0; color: rgba(255, 248, 231, 0.5); font-family: var(--font-english); font-size: 1.1rem; }
 
   @media (max-width: 768px) {
     .upload-form { grid-template-columns: 1fr; }
@@ -301,19 +207,13 @@
             </feMerge>
           </filter>
           <linearGradient id="fire-outer" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#B71C1C" />
-            <stop offset="50%" stop-color="#FF5722" />
-            <stop offset="100%" stop-color="#FF9800" />
+            <stop offset="0%" stop-color="#B71C1C" /><stop offset="50%" stop-color="#FF5722" /><stop offset="100%" stop-color="#FF9800" />
           </linearGradient>
           <linearGradient id="fire-mid" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#FF5722" />
-            <stop offset="60%" stop-color="#FFC107" />
-            <stop offset="100%" stop-color="#FFEB3B" />
+            <stop offset="0%" stop-color="#FF5722" /><stop offset="60%" stop-color="#FFC107" /><stop offset="100%" stop-color="#FFEB3B" />
           </linearGradient>
           <linearGradient id="fire-inner" x1="0%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#FFC107" />
-            <stop offset="50%" stop-color="#FFF59D" />
-            <stop offset="100%" stop-color="#FFFFFF" />
+            <stop offset="0%" stop-color="#FFC107" /><stop offset="50%" stop-color="#FFF59D" /><stop offset="100%" stop-color="#FFFFFF" />
           </linearGradient>
           <style>
             @keyframes flicker-outer { 0% { transform: scale(1, 1); } 100% { transform: scale(1.03, 1.06); } }
@@ -335,7 +235,6 @@
       <h1 class="gradient-text">Upload Projects</h1>
     </div>
 
-    <!-- Upload Form -->
     <div class="upload-section">
       <form id="projectForm" class="upload-form">
         <div class="form-group">
@@ -379,7 +278,7 @@
       const grid = document.getElementById('projectsGrid');
 
       const DB_NAME = 'LastChanceProjectsDB';
-      const DB_VERSION = 2; 
+      const DB_VERSION = 2;
       const STORE_NAME = 'projects';
 
       function openDB() {
