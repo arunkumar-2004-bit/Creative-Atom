@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="format-detection" content="telephone=no">
 <title>Last Chance | Upload Projects</title>
 
 <!-- Favicon (Flame Logo in URL) -->
@@ -334,7 +335,7 @@
       <h1 class="gradient-text">Upload Projects</h1>
     </div>
 
-    <!-- Upload Form (Files removed) -->
+    <!-- Upload Form -->
     <div class="upload-section">
       <form id="projectForm" class="upload-form">
         <div class="form-group">
@@ -378,7 +379,7 @@
       const grid = document.getElementById('projectsGrid');
 
       const DB_NAME = 'LastChanceProjectsDB';
-      const DB_VERSION = 2; // Bumped version to reset previous DB with blobs
+      const DB_VERSION = 2; 
       const STORE_NAME = 'projects';
 
       function openDB() {
@@ -387,7 +388,7 @@
           request.onupgradeneeded = (event) => {
             const db = event.target.result;
             if (db.objectStoreNames.contains(STORE_NAME)) {
-              db.deleteObjectStore(STORE_NAME); // Clear old structure
+              db.deleteObjectStore(STORE_NAME); 
             }
             db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
           };
@@ -455,7 +456,7 @@
           card.className = 'project-card';
 
           const viewBtnHtml = project.url
-            ? `<a href="${escapeHtml(project.url)}" target="_blank" class="view-btn">View Project</a>`
+            ? `<a href="${escapeHtml(project.url)}" target="_blank" rel="noopener noreferrer" class="view-btn">View Project</a>`
             : '';
 
           card.innerHTML = `
