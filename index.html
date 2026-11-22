@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="format-detection" content="telephone=no"> <!-- Prevents auto-coloring of numbers -->
+<meta name="format-detection" content="telephone=no"> <!-- Stops browser auto-coloring -->
 <title>Last Chance</title>
 
 <!-- Favicon (Flame Logo in URL) -->
@@ -326,15 +326,23 @@
     background: #F2D782; 
   }
 
-  /* BULLETPROOF FIX FOR COLOR INCONSISTENCIES */
+  /* ------------------------------------------------------------
+     BULLETPROOF COLOR OVERRIDE (Solves the Teal "10" and "/" issue)
+     Forces ALL child elements to the same maroon color, ignoring
+     any browser auto-formatting (iOS/Android phone number links).
+  ------------------------------------------------------------ */
+  .project-card, 
+  .project-card *,
   .project-card h3, 
   .project-card p, 
   .project-card .project-desc,
-  .project-card span {
-    color: var(--maroon) !important;
-    -webkit-text-fill-color: var(--maroon) !important; /* Forces browser to ignore auto-styling */
+  .project-card span,
+  .project-card a {
+    color: #420B0B !important;
+    -webkit-text-fill-color: #420B0B !important;
     background: transparent !important;
     -webkit-background-clip: unset !important;
+    text-decoration: none !important;
     text-shadow: none !important;
   }
 
@@ -737,11 +745,10 @@
               card.style.cursor = 'default';
             }
 
-            // Force inline styles to guarantee the color cannot be overridden by browser auto-formatting
             card.innerHTML = `
-              <h3 style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.name)}</h3>
-              <p style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.subtitle)}</p>
-              <p class="project-desc" style="color: var(--maroon) !important; -webkit-text-fill-color: var(--maroon) !important;">${escapeHtml(project.desc)}</p>
+              <h3>${escapeHtml(project.name)}</h3>
+              <p>${escapeHtml(project.subtitle)}</p>
+              <p class="project-desc">${escapeHtml(project.desc)}</p>
             `;
             
             projectsGrid.appendChild(card);
