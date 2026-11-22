@@ -13,16 +13,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Cairo+Play:wght@500&family=Hind+Madurai:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
-  /* ============================================================
-     BASE STYLES & BACKGROUND
-  ============================================================ */
   :root {
     --maroon: #420B0B; 
     --gold: #C9A227;
     --gold-2: #E5C76A;
     --cream: #FFF8E7;
     --white: #FFFFFF;
-    --font-display: 'Cormorant Garamond', Georgia, serif;
     --font-english: 'Cairo Play', cursive, system-ui, sans-serif; 
     --font-tamil: 'Hind Madurai', sans-serif;
     --font-logo: 'Cairo Play', cursive, system-ui, sans-serif;
@@ -31,7 +27,6 @@
   body {
     margin: 0;
     background-color: var(--maroon);
-    /* Yellow dots pattern */
     background-image: radial-gradient(circle, rgba(201, 162, 39, 0.25) 1.5px, transparent 1.5px);
     background-size: 40px 40px;
     background-position: center;
@@ -41,9 +36,6 @@
     box-sizing: border-box;
   }
 
-  /* ============================================================
-     MAIN LAYOUT
-  ============================================================ */
   .main-content {
     width: 100%;
     max-width: 1200px;
@@ -80,9 +72,6 @@
     letter-spacing: -0.02em;
   }
 
-  /* ============================================================
-     UPLOAD FORM SECTION
-  ============================================================ */
   .upload-section {
     background: rgba(255, 248, 231, 0.03);
     border: 1px solid rgba(201,162,39,0.3);
@@ -147,69 +136,6 @@
     min-height: 100px;
   }
 
-  /* File Input Styling */
-  .form-group input[type="file"] {
-    padding: 12px;
-    background: rgba(0,0,0,0.2);
-    border: 1px dashed rgba(201,162,39,0.4);
-    border-radius: 8px;
-    color: var(--white);
-    font-family: var(--font-english);
-    font-size: 0.95rem;
-    cursor: pointer;
-    width: 100%;
-  }
-
-  .form-group input[type="file"]::file-selector-button {
-    background: var(--gold-2);
-    color: var(--maroon);
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-family: var(--font-english);
-    font-weight: 500;
-    cursor: pointer;
-    margin-right: 12px;
-    transition: background 0.3s ease;
-  }
-
-  .form-group input[type="file"]::file-selector-button:hover {
-    background: var(--gold);
-  }
-
-  .file-list-display {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-  }
-
-  .file-chip {
-    background: rgba(201,162,39,0.15);
-    border: 1px solid rgba(201,162,39,0.4);
-    color: var(--cream);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-family: var(--font-english);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .file-chip .file-size {
-    color: var(--gold-2);
-    font-size: 0.75rem;
-  }
-
-  .optional-hint {
-    font-size: 0.75rem;
-    color: rgba(255,248,231,0.4);
-    font-family: var(--font-english);
-    font-weight: 400;
-    margin-left: 6px;
-  }
-
   .submit-btn {
     grid-column: 1 / -1;
     padding: 16px;
@@ -231,9 +157,6 @@
     box-shadow: 0 8px 25px rgba(201,162,39,0.3);
   }
 
-  /* ============================================================
-     PROJECT GRID
-  ============================================================ */
   .projects-header {
     text-align: center;
     margin-bottom: 3rem;
@@ -267,7 +190,6 @@
     border-radius: 12px;
     padding: 2rem 1.5rem;
     text-align: center;
-    transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -276,14 +198,6 @@
     position: relative;
   }
 
-  .project-card:hover {
-    transform: translateY(-8px);
-    border-color: var(--gold);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    background: rgba(255, 248, 231, 0.06);
-  }
-
-  /* Delete Button on Card */
   .delete-btn {
     position: absolute;
     top: 15px;
@@ -299,8 +213,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 10;
   }
 
   .delete-btn:hover {
@@ -321,7 +233,6 @@
     font-size: 0.95rem;
     color: var(--gold-2);
     margin: 0;
-    line-height: 1.5;
     font-weight: 500;
   }
 
@@ -346,7 +257,6 @@
     font-family: var(--font-english);
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
     display: inline-block;
@@ -357,51 +267,6 @@
     color: var(--maroon);
   }
 
-  /* Files list inside project card */
-  .files-list {
-    width: 100%;
-    margin-top: 1rem;
-    text-align: left;
-    border-top: 1px solid rgba(201,162,39,0.15);
-    padding-top: 0.8rem;
-  }
-
-  .files-label {
-    font-family: var(--font-english);
-    font-size: 0.8rem;
-    color: var(--gold-2);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.4rem;
-  }
-
-  .file-link {
-    display: block;
-    color: var(--cream);
-    text-decoration: none;
-    font-family: var(--font-english);
-    font-size: 0.85rem;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(201,162,39,0.1);
-    transition: color 0.2s ease;
-    word-break: break-all;
-  }
-
-  .file-link:last-child {
-    border-bottom: none;
-  }
-
-  .file-link:hover {
-    color: var(--gold-2);
-  }
-
-  .file-link .file-size {
-    color: rgba(255,248,231,0.5);
-    font-size: 0.75rem;
-    margin-left: 4px;
-  }
-
-  /* Empty State */
   .empty-state {
     grid-column: 1 / -1;
     text-align: center;
@@ -411,9 +276,6 @@
     font-size: 1.1rem;
   }
 
-  /* ============================================================
-     RESPONSIVE ADJUSTMENTS
-  ============================================================ */
   @media (max-width: 768px) {
     .upload-form { grid-template-columns: 1fr; }
     .header { flex-direction: column; text-align: center; gap: 1rem; }
@@ -427,7 +289,6 @@
 
   <div class="main-content">
     
-    <!-- Header -->
     <div class="header">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
@@ -473,40 +334,33 @@
       <h1 class="gradient-text">Upload Projects</h1>
     </div>
 
-    <!-- Upload Form -->
+    <!-- Upload Form (Files removed) -->
     <div class="upload-section">
       <form id="projectForm" class="upload-form">
         <div class="form-group">
           <label for="projectName">Project Name</label>
-          <input type="text" id="projectName" placeholder="e.g. Target the Web" required>
+          <input type="text" id="projectName" placeholder="e.g. Windows 10 Pro VM" required>
         </div>
         
         <div class="form-group">
           <label for="projectSubtitle">Subtitle / Category</label>
-          <input type="text" id="projectSubtitle" placeholder="e.g. Advanced Search Tool" required>
+          <input type="text" id="projectSubtitle" placeholder="e.g. Virtual Machine / ISO file" required>
         </div>
 
         <div class="form-group full-width">
-          <label for="projectUrl">Project Link (URL) <span class="optional-hint">— optional if files are attached</span></label>
-          <input type="url" id="projectUrl" placeholder="https://example.com">
-        </div>
-
-        <div class="form-group full-width">
-          <label for="projectFiles">Project Files <span class="optional-hint">— optional if URL is provided (multiple allowed)</span></label>
-          <input type="file" id="projectFiles" multiple>
-          <div class="file-list-display" id="fileListDisplay"></div>
+          <label for="projectUrl">Project Link (URL)</label>
+          <input type="url" id="projectUrl" placeholder="https://arunkumar-2004-bit.github.io/Last-Chance/windows-virtualbox.html" required>
         </div>
 
         <div class="form-group full-width">
           <label for="projectDesc">Description</label>
-          <textarea id="projectDesc" placeholder="Describe what this project does..." required></textarea>
+          <textarea id="projectDesc" placeholder="This main purpose is to easily run the windows 10 pro os in the virtual box for your personal use..." required></textarea>
         </div>
 
         <button type="submit" class="submit-btn">Add Project</button>
       </form>
     </div>
 
-    <!-- Projects Display Grid -->
     <div class="projects-header">
       <h2 class="projects-title gradient-text">Live Projects</h2>
       <div class="projects-divider"></div>
@@ -522,12 +376,9 @@
     document.addEventListener("DOMContentLoaded", async () => {
       const form = document.getElementById('projectForm');
       const grid = document.getElementById('projectsGrid');
-      const fileInput = document.getElementById('projectFiles');
-      const fileListDisplay = document.getElementById('fileListDisplay');
 
-      // ---------- IndexedDB Setup ----------
       const DB_NAME = 'LastChanceProjectsDB';
-      const DB_VERSION = 1;
+      const DB_VERSION = 2; // Bumped version to reset previous DB with blobs
       const STORE_NAME = 'projects';
 
       function openDB() {
@@ -535,9 +386,10 @@
           const request = indexedDB.open(DB_NAME, DB_VERSION);
           request.onupgradeneeded = (event) => {
             const db = event.target.result;
-            if (!db.objectStoreNames.contains(STORE_NAME)) {
-              db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+            if (db.objectStoreNames.contains(STORE_NAME)) {
+              db.deleteObjectStore(STORE_NAME); // Clear old structure
             }
+            db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
           };
           request.onsuccess = (event) => resolve(event.target.result);
           request.onerror = (event) => reject(event.target.error);
@@ -549,7 +401,7 @@
         db = await openDB();
       } catch (err) {
         console.error('IndexedDB failed to open:', err);
-        grid.innerHTML = '<div class="empty-state">Failed to open database. Please ensure IndexedDB is available.</div>';
+        grid.innerHTML = '<div class="empty-state">Failed to open database.</div>';
         return;
       }
 
@@ -583,36 +435,12 @@
         });
       }
 
-      // ---------- Object URL Management ----------
-      let createdObjectUrls = [];
-
-      function revokeAllObjectUrls() {
-        createdObjectUrls.forEach(url => URL.revokeObjectURL(url));
-        createdObjectUrls = [];
-      }
-
-      // ---------- File Input Preview ----------
-      fileInput.addEventListener('change', () => {
-        const files = fileInput.files;
-        if (!files.length) {
-          fileListDisplay.innerHTML = '';
-          return;
-        }
-        fileListDisplay.innerHTML = Array.from(files).map(f =>
-          `<span class="file-chip">${escapeHtml(f.name)} <span class="file-size">(${formatSize(f.size)})</span></span>`
-        ).join('');
-      });
-
-      // ---------- Render Projects ----------
       async function renderProjects() {
-        revokeAllObjectUrls();
         grid.innerHTML = '';
-
         let projects;
         try {
           projects = await getAllProjects();
         } catch (err) {
-          console.error(err);
           grid.innerHTML = '<div class="empty-state">Failed to load projects.</div>';
           return;
         }
@@ -626,21 +454,6 @@
           const card = document.createElement('div');
           card.className = 'project-card';
 
-          // Build files list with downloadable links
-          let filesHtml = '';
-          if (project.files && project.files.length > 0) {
-            const links = project.files.map(file => {
-              if (!file.blob) return '';
-              const url = URL.createObjectURL(file.blob);
-              createdObjectUrls.push(url);
-              return `<a class="file-link" href="${url}" download="${escapeHtml(file.name)}">📎 ${escapeHtml(file.name)} <span class="file-size">(${formatSize(file.size)})</span></a>`;
-            }).filter(Boolean).join('');
-
-            if (links) {
-              filesHtml = `<div class="files-list"><div class="files-label">Attached Files</div>${links}</div>`;
-            }
-          }
-
           const viewBtnHtml = project.url
             ? `<a href="${escapeHtml(project.url)}" target="_blank" class="view-btn">View Project</a>`
             : '';
@@ -650,14 +463,12 @@
             <h3>${escapeHtml(project.name)}</h3>
             <p class="subtitle">${escapeHtml(project.subtitle)}</p>
             <p class="project-desc">${escapeHtml(project.desc)}</p>
-            ${filesHtml}
             ${viewBtnHtml}
           `;
 
           grid.appendChild(card);
         });
 
-        // Attach delete handlers
         grid.querySelectorAll('.delete-btn').forEach(btn => {
           btn.addEventListener('click', async () => {
             const id = Number(btn.dataset.id);
@@ -666,7 +477,6 @@
                 await deleteProjectById(id);
                 await renderProjects();
               } catch (err) {
-                console.error(err);
                 alert('Failed to delete project.');
               }
             }
@@ -674,54 +484,25 @@
         });
       }
 
-      // ---------- Form Submission ----------
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('projectName').value.trim();
-        const subtitle = document.getElementById('projectSubtitle').value.trim();
-        const url = document.getElementById('projectUrl').value.trim();
-        const desc = document.getElementById('projectDesc').value.trim();
-        const files = fileInput.files;
-
-        // Validate: at least one of URL or files
-        if (!url && files.length === 0) {
-          alert('Please provide at least a project link OR one or more files.');
-          return;
-        }
-
-        const fileEntries = Array.from(files).map(f => ({
-          name: f.name,
-          type: f.type,
-          size: f.size,
-          blob: f
-        }));
-
         const newProject = {
-          name,
-          subtitle,
-          url,
-          desc,
-          files: fileEntries
+          name: document.getElementById('projectName').value.trim(),
+          subtitle: document.getElementById('projectSubtitle').value.trim(),
+          url: document.getElementById('projectUrl').value.trim(),
+          desc: document.getElementById('projectDesc').value.trim()
         };
 
         try {
           await addProject(newProject);
           form.reset();
-          fileListDisplay.innerHTML = '';
           await renderProjects();
         } catch (err) {
           console.error(err);
-          alert('Failed to add project. The files may be too large for browser storage.');
+          alert('Failed to add project.');
         }
       });
-
-      // ---------- Helpers ----------
-      function formatSize(bytes) {
-        if (bytes < 1024) return bytes + ' B';
-        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-      }
 
       function escapeHtml(str) {
         if (str == null) return '';
@@ -730,7 +511,6 @@
         return div.innerHTML;
       }
 
-      // ---------- Initial Render ----------
       await renderProjects();
     });
   </script>
