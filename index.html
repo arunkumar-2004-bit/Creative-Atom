@@ -316,6 +316,7 @@
     align-items: center;
     justify-content: center;
     color: var(--maroon); 
+    position: relative;
   }
 
   .project-card:hover {
@@ -349,6 +350,52 @@
     margin-top: 1.2rem;
     line-height: 1.6;
     text-align: center;
+  }
+
+  /* Files list inside project card */
+  .files-list {
+    width: 100%;
+    margin-top: 1rem;
+    text-align: left;
+    border-top: 1px solid rgba(66, 11, 11, 0.15);
+    padding-top: 0.8rem;
+  }
+
+  .files-label {
+    font-family: var(--font-english);
+    font-size: 0.8rem;
+    color: var(--maroon);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+  }
+
+  .file-link {
+    display: block;
+    color: #551010;
+    text-decoration: none;
+    font-family: var(--font-english);
+    font-size: 0.85rem;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(66, 11, 11, 0.1);
+    transition: color 0.2s ease;
+    word-break: break-all;
+    font-weight: 500;
+  }
+
+  .file-link:last-child {
+    border-bottom: none;
+  }
+
+  .file-link:hover {
+    color: var(--white);
+  }
+
+  .file-link .file-size {
+    color: rgba(66, 11, 11, 0.6);
+    font-size: 0.75rem;
+    margin-left: 4px;
   }
 
   /* ============================================================
@@ -660,7 +707,7 @@
       <h3>Scan to Donate</h3>
       
       <!-- QR Image with Error Fallback -->
-      <img src="qr.jpeg" alt="UPI QR Code" class="qr-image" id="qrImage">
+      <img src="upi-qr.jpg" alt="UPI QR Code" class="qr-image" id="qrImage">
       
       <!-- Error Message (Hidden by default, shown if image fails to load) -->
       <div id="qrError" class="qr-error-msg">
@@ -673,46 +720,118 @@
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       
       // =========================================================
-      // 1. LOAD DYNAMIC PROJECTS FROM LOCAL STORAGE
+      // 1. LOAD DYNAMIC PROJECTS FROM INDEXEDDB
       // =========================================================
       const projectsGrid = document.getElementById('projectsGrid');
-      let savedProjects = JSON.parse(localStorage.getItem('creativeAtomProjects')) || [];
+      
+      const DB_NAME = 'LastChanceProjectsDB';
+      const DB_VERSION = 1;
+      const STORE_NAME = 'projects';
 
-      savedProjects.forEach(project => {
-        const card = document.createElement('a');
-        card.href = project.url || '#';
-        card.target = '_blank';
-        card.className = 'project-card';
-        
-        if (!project.url && project.files && project.files.length > 0) {
-          card.href = '#';
-          card.style.cursor = 'default';
-          card.onclick = (e) => e.preventDefault();
+      function openDB() {
+        return new Promise((resolve, reject) => {
+          const request = indexedDB.open(DB_NAME, DB_VERSION);
+          request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+              db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+            }
+          };
+          request.onsuccess = (event) => resolve(event.target.result);
+          request.onerror = (event) => reject(event.target.error);
+        });
+      }
+
+      function getAllProjects() {
+        return new Promise((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const store = tx.objectStore(STORE_NAME);
+          const request = store.getAll();
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+      }
+
+      let db;
+      let createdObjectUrls = [];
+
+      try {
+        db = await openDB();
+        const savedProjects = await getAllProjects();
+
+        // Render fetched projects
+        if (savedProjects && savedProjects.length > 0) {
+          savedProjects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            
+            // If there is a URL, make the whole card act like a link
+            if (project.url) {
+              card.style.cursor = 'pointer';
+              card.addEventListener('click', () => {
+                window.open(project.url, '_blank');
+              });
+            } else {
+              card.style.cursor = 'default';
+            }
+
+            // Build files list
+            let filesHtml = '';
+            if (project.files && project.files.length > 0) {
+              const links = project.files.map(file => {
+                if (!file.blob) return '';
+                const url = URL.createObjectURL(file.blob);
+                createdObjectUrls.push(url);
+                // stopPropagation prevents the card's click event from firing
+                return `<a class="file-link" href="${url}" download="${escapeHtml(file.name)}" onclick="event.stopPropagation();">📎 ${escapeHtml(file.name)} <span class="file-size">(${formatSize(file.size)})</span></a>`;
+              }).filter(Boolean).join('');
+
+              if (links) {
+                filesHtml = `<div class="files-list"><div class="files-label">Attached Files</div>${links}</div>`;
+              }
+            }
+
+            card.innerHTML = `
+              <h3>${escapeHtml(project.name)}</h3>
+              <p>${escapeHtml(project.subtitle)}</p>
+              <p class="project-desc">${escapeHtml(project.desc)}</p>
+              ${filesHtml}
+            `;
+            
+            projectsGrid.appendChild(card);
+          });
+        } else {
+          // If there are no saved projects, show placeholder cards
+          projectsGrid.innerHTML += `
+            <div class="project-card" style="cursor:default;">
+              <h3>Project Two</h3>
+              <p>Coming Soon...</p>
+            </div>
+            <div class="project-card" style="cursor:default;">
+              <h3>Project Three</h3>
+              <p>Coming Soon...</p>
+            </div>
+          `;
         }
-        
-        card.innerHTML = `
-          <h3>${project.name}</h3>
-          <p>${project.subtitle}</p>
-          <p class="project-desc">${project.desc}</p>
-        `;
-        
-        projectsGrid.appendChild(card);
-      });
+      } catch (err) {
+        console.error('Failed to load projects from IndexedDB:', err);
+      }
 
-      if (savedProjects.length === 0) {
-        projectsGrid.innerHTML += `
-          <div class="project-card" style="cursor:default;">
-            <h3>Project Two</h3>
-            <p>Coming Soon...</p>
-          </div>
-          <div class="project-card" style="cursor:default;">
-            <h3>Project Three</h3>
-            <p>Coming Soon...</p>
-          </div>
-        `;
+      // Helper functions
+      function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+
+      function escapeHtml(str) {
+        if (str == null) return '';
+        const div = document.createElement('div');
+        div.textContent = String(str);
+        return div.innerHTML;
       }
 
       // =========================================================
@@ -812,10 +931,9 @@
       const qrImage = document.getElementById("qrImage");
       const qrError = document.getElementById("qrError");
 
-      // Handle image loading error
       qrImage.addEventListener("error", () => {
-        qrImage.style.display = "none"; // Hide the broken image icon
-        qrError.style.display = "block"; // Show the error message
+        qrImage.style.display = "none";
+        qrError.style.display = "block";
       });
 
       openBtn.addEventListener("click", () => {
