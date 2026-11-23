@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- Favicon (Flame Logo in URL) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='25 25 150 150'%3E%3Ccircle cx='100' cy='100' r='85' fill='%23050505' stroke='%23FFFFFF' stroke-width='4'/%3E%3Cpath d='M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z' fill='%23FF5722'/%3E%3Cpath d='M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z' fill='%23FFC107'/%3E%3Cpath d='M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z' fill='%23FFFFFF'/%3E%3C/svg%3E">
+
+<title>Disk Cleaner</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo+Play:wght@500;600;700&family=Hind+Madurai:wght@400;500;700&family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+
+<style>
+  /* ============================================================
+     BASE
+  ============================================================ */
+  :root {
+    --maroon: #420B0B;
+    --maroon-deep: #2A0707;
+    --gold: #C9A227;
+    --gold-2: #E5C76A;
+    --gold-soft: #F2D782;
+    --cream: #FFF8E7;
+    --white: #FFFFFF;
+
+    --font-english: 'Cairo Play', cursive, system-ui, sans-serif;
+    --font-logo: 'Cairo Play', cursive, system-ui, sans-serif;
+    --font-body: 'Roboto', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background-color: var(--maroon);
+    background-image: radial-gradient(circle, rgba(201, 162, 39, 0.25) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
+    background-position: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: var(--font-body);
+    color: var(--cream);
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, var(--cream) 0%, var(--gold-2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
+    padding-right: 8px;
+    padding-bottom: 4px;
+  }
+
+  /* ============================================================
+     INTRO OVERLAY
+  ============================================================ */
+  .intro-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: #000000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fade-out-overlay 1s ease-in-out 4s forwards;
+  }
+
+  .intro-logo {
+    width: 85px;
+    height: 85px;
+    opacity: 0;
+    transform: scale(0);
+    animation: ignite 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) 1.2s forwards;
+  }
+
+  @keyframes ignite {
+    0%   { transform: scale(0); opacity: 0; filter: brightness(5) drop-shadow(0 0 30px #FF5722); }
+    30%  { transform: scale(0.2); opacity: 1; filter: brightness(3) drop-shadow(0 0 20px #FF9800); }
+    100% { transform: scale(1); opacity: 1; filter: brightness(1) drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+  }
+
+  @keyframes fade-out-overlay {
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  /* Flame animation */
+  @keyframes flicker-outer { 0% { transform: scale(1, 1); } 100% { transform: scale(1.03, 1.06); } }
+  @keyframes flicker-mid   { 0% { transform: scale(1, 1); } 100% { transform: scale(1.06, 1.10); } }
+  @keyframes flicker-inner { 0% { transform: scale(1, 1); opacity: 0.85; } 100% { transform: scale(1.10, 1.15); opacity: 1; } }
+  @keyframes pulse-glow    { 0% { opacity: 0.30; transform: scale(1); } 100% { opacity: 0.70; transform: scale(1.10); } }
+
+  .flame-outer { transform-origin: 100px 165px; animation: flicker-outer 1.2s infinite alternate ease-in-out; }
+  .flame-mid   { transform-origin: 100px 160px; animation: flicker-mid   0.9s infinite alternate ease-in-out; }
+  .flame-inner { transform-origin: 100px 152px; animation: flicker-inner 0.6s infinite alternate ease-in-out; }
+  .glow-bg     { transform-origin: 100px 100px; animation: pulse-glow    1.5s infinite alternate ease-in-out; }
+
+  /* ============================================================
+     MAIN CONTENT & LAYOUT
+  ============================================================ */
+  .main-content {
+    opacity: 0;
+    animation: reveal-content 1.4s ease-in 4s forwards;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5rem 2rem 0;
+  }
+
+  @keyframes reveal-content { to { opacity: 1; } }
+
+  .shell {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ---------- Hero / Title Area ---------- */
+  .hero-section {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Company Logo Above Title */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .brand-logo svg {
+    width: 38px;
+    height: 38px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+  }
+
+  /* Matched to Downloads title font */
+  .brand-logo-text {
+    font-family: var(--font-logo);
+    font-size: 1.8rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  /* Main Title (Matched to Downloads title font) */
+  .main-title {
+    font-family: var(--font-logo);
+    font-size: 4.2rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem;
+  }
+
+  .section-divider {
+    width: 100%;
+    max-width: 800px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.6), transparent);
+    margin-bottom: 2.5rem;
+  }
+
+  /* ---------- Purpose Box ---------- */
+  .purpose-banner {
+    background-color: var(--gold-2);
+    color: var(--maroon);
+    padding: 2rem 2.5rem;
+    border-radius: 12px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    text-align: center;
+    width: 100%;
+    max-width: 850px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    min-height: 150px; 
+  }
+
+  .purpose-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--maroon);
+  }
+
+  .purpose-text {
+    font-weight: 400;
+    color: var(--maroon);
+    font-size: 1.1rem;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background-color: var(--maroon);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 0.8s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ---------- Downloads Section ---------- */
+  .downloads-section {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .downloads-title {
+    font-family: var(--font-logo);
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin: 0 0 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .download-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .btn {
+    font-family: var(--font-english);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 1.1rem 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.28s ease, color 0.28s ease;
+    background: var(--gold-2);
+    color: var(--maroon);
+    border-color: var(--gold-2);
+    box-shadow: 0 10px 26px rgba(201, 162, 39, 0.15);
+  }
+
+  .btn:hover {
+    transform: translateY(-4px);
+    background: #F2D782;
+    border-color: #F2D782;
+    box-shadow: 0 16px 34px rgba(201, 162, 39, 0.3);
+  }
+
+  .btn svg { width: 22px; height: 22px; }
+
+  /* ---------- Application Preview ---------- */
+  .section {
+    width: 100%;
+    margin-top: 2rem;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-title {
+    font-family: var(--font-logo);
+    font-size: 2.5rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.1rem;
+  }
+
+  .section-sub {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: rgba(255, 248, 231, 0.7);
+    margin: 1rem 0 0;
+    line-height: 1.6;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+  }
+
+  .gallery-item {
+    background: rgba(255, 248, 231, 0.04);
+    border: 1px solid rgba(201, 162, 39, 0.32);
+    border-radius: 14px;
+    padding: 0.6rem;
+    transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .gallery-item:hover {
+    transform: translateY(-6px);
+    border-color: var(--gold-2);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+  }
+
+  /* ---------- Contact / Notice ---------- */
+  .contact-box {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 5rem;
+    border: 1px solid rgba(201, 162, 39, 0.45);
+    background: rgba(201, 162, 39, 0.08);
+    border-radius: 14px;
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .contact-box h4 {
+    font-family: var(--font-english);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--gold-2);
+    margin: 0 0 0.8rem;
+  }
+
+  .contact-box p {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 248, 231, 0.85);
+    margin: 0;
+  }
+
+  .contact-box a {
+    color: var(--gold-2);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: color 0.25s ease;
+  }
+
+  .contact-box a:hover {
+    color: var(--white);
+    text-decoration: underline;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    width: 100%;
+    margin-top: 6rem;
+    padding: 2.2rem 0 2.6rem;
+    border-top: 1px solid rgba(201, 162, 39, 0.22);
+    text-align: center;
+  }
+
+  footer p {
+    font-family: var(--font-english);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 248, 231, 0.5);
+    margin: 0;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 768px) {
+    .main-content { padding: 4rem 1.2rem 0; }
+    .brand-logo svg { width: 30px; height: 30px; }
+    .brand-logo-text { font-size: 1.5rem; }
+    .main-title { font-size: 3rem; }
+    .purpose-banner { padding: 1.5rem; font-size: 1.05rem; }
+    .downloads-title { font-size: 2rem; }
+    .section-title { font-size: 2rem; }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .contact-box { padding: 1.8rem 1.2rem; }
+  }
+
+  @media (max-width: 480px) {
+    .main-title { font-size: 2.4rem; }
+    .purpose-banner { padding: 1.2rem 1rem; }
+    .btn { width: 100%; justify-content: center; padding: 0.9rem 1.4rem; }
+    .download-actions { flex-direction: column; }
+    .section-title { font-size: 1.7rem; }
+  }
+</style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       SHARED SVG DEFS
+  ============================================================ -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="5" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <linearGradient id="fire-outer" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#B71C1C" />
+        <stop offset="50%" stop-color="#FF5722" />
+        <stop offset="100%" stop-color="#FF9800" />
+      </linearGradient>
+      <linearGradient id="fire-mid" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#FF5722" />
+        <stop offset="60%" stop-color="#FFC107" />
+        <stop offset="100%" stop-color="#FFEB3B" />
+      </linearGradient>
+      <linearGradient id="fire-inner" x1="0%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#FFC107" />
+        <stop offset="50%" stop-color="#FFF59D" />
+        <stop offset="100%" stop-color="#FFFFFF" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ============================================================
+       INTRO OVERLAY
+  ============================================================ -->
+  <div class="intro-overlay">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="intro-logo" aria-hidden="true">
+      <circle cx="100" cy="100" r="85" fill="#050505" stroke="#FFFFFF" stroke-width="2" />
+      <circle cx="100" cy="100" r="60" fill="#FF5722" opacity="0.5" filter="url(#glow)" class="glow-bg" />
+      <path class="flame-outer" d="M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z" fill="url(#fire-outer)" filter="url(#glow)"/>
+      <path class="flame-mid" d="M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z" fill="url(#fire-mid)" />
+      <path class="flame-inner" d="M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z" fill="url(#fire-inner)" />
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <div class="main-content">
+    <div class="shell">
+
+      <!-- ---------- Hero / Title & Purpose ---------- -->
+      <div class="hero-section">
+        
+        <!-- Company Logo Centered Above Title -->
+        <div class="brand-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" aria-hidden="true">
+            <circle cx="100" cy="100" r="85" fill="#050505" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="100" cy="100" r="60" fill="#FF5722" opacity="0.5" filter="url(#glow)" class="glow-bg" />
+            <path class="flame-outer" d="M 100 30 C 140 80, 140 155, 100 165 C 60 155, 60 80, 100 30 Z" fill="url(#fire-outer)" filter="url(#glow)"/>
+            <path class="flame-mid" d="M 100 65 C 125 100, 125 155, 100 160 C 75 155, 75 100, 100 65 Z" fill="url(#fire-mid)" />
+            <path class="flame-inner" d="M 100 90 C 115 115, 115 148, 100 152 C 85 148, 85 115, 100 90 Z" fill="url(#fire-inner)" />
+          </svg>
+          <span class="brand-logo-text gradient-text">Creative Atom</span>
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="main-title gradient-text">Disk Cleaner</h1>
+        <div class="section-divider"></div>
+        
+        <!-- Purpose Section -->
+        <div class="purpose-banner">
+          <div class="purpose-title">Purpose</div>
+          <div class="purpose-text">
+            <span id="typewriter"></span><span class="typewriter-cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- Downloads ---------- -->
+      <div class="downloads-section">
+        <h2 class="downloads-title gradient-text">Downloads</h2>
+        <div class="section-divider" style="width: 50%; margin: 0 auto;"></div>
+        
+        <div class="download-actions">
+          <!-- Windows -->
+          <a class="btn" href="Disk_Cleaner_Windows.zip" download>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801"/>
+            </svg>
+            Windows
+          </a>
+          
+          <!-- Linux -->
+          <a class="btn" href="Disk_Cleaner_Linux.zip" download>
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 0c-3.09 0-5.6 2.51-5.6 5.6v3.6c0 1.5-.5 2.9-1.4 4l-2.6 3.3c-1.2 1.5-1 3.7.5 4.9 1.4 1.1 3.4 1 4.7-.2l.5-.5c1.4-1.3 3.3-2 5.3-2s3.9.7 5.3 2l.5.5c1.3 1.2 3.3 1.3 4.7.2 1.5-1.2 1.7-3.4.5-4.9l-2.6-3.3c-.9-1.1-1.4-2.5-1.4-4V5.6C17.6 2.51 15.09 0 12 0zm0 2c1.99 0 3.6 1.61 3.6 3.6v3.6c0 2.1.7 4.1 2 5.7l2.6 3.3c.5.6.4 1.6-.2 2.1-.5.4-1.3.3-1.8-.2l-.5-.5c-1.8-1.7-4.2-2.6-6.7-2.6s-4.9.9-6.7 2.6l-.5.5c-.5.5-1.3.6-1.8.2-.6-.5-.7-1.5-.2-2.1l2.6-3.3c1.3-1.6 2-3.6 2-5.7V5.6C8.4 3.61 10.01 2 12 2zM9.5 6.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S8 8.83 8 8s.67-1.5 1.5-1.5zm5 0c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5S13 8.83 13 8s.67-1.5 1.5-1.5z"/>
+            </svg>
+            Linux
+          </a>
+          
+        
+        </div>
+      </div>
+
+      <!-- ---------- Application Photos ---------- -->
+      <section class="section" id="screenshots">
+        <div class="section-header">
+          <h2 class="section-title gradient-text">Application Preview</h2>
+          <div class="section-divider" style="max-width: 100%;"></div>
+          <p class="section-sub">See it in action before you download.</p>
+        </div>
+
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img src="1.png" alt="Disk Cleaner Scanning Interface" />
+          </div>
+          <div class="gallery-item">
+            <img src="2.png" alt="Disk Cleaner File List View" />
+          </div>
+          <div class="gallery-item">
+            <img src="3.png" alt="Disk Cleaner Selection State" />
+          </div>
+          <div class="gallery-item">
+            <img src="4.png" alt="Disk Cleaner Cache Scan View" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------- Contact Info ---------- -->
+      <div class="contact-box" id="contact">
+        <h4>Need Help?</h4>
+        <p>
+          For any queries and enhancement suggestions related to the application, please contact:<br><br>
+          <a href="mailto:p.arunkumar200444@gmail.com?subject=Disk%20Cleaner%20Inquiry">p.arunkumar200444@gmail.com</a>
+		  
+        </p>
+      </div>
+
+      <!-- ---------- Footer ---------- -->
+      <footer>
+        <p>Disk Cleaner &nbsp;•&nbsp; Simple tools, built with purpose</p>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CONTINUOUS TYPEWRITER SCRIPT
+  ============================================================ -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const textToType = "This helps to clean the storage instead of searching the files and also it helps to remove the cache files.";
+      const typewriterElement = document.getElementById("typewriter");
+      
+      let charIndex = 0;
+      let isDeleting = false;
+
+      function loopTypewriter() {
+        if (!isDeleting) {
+          // Typing forward
+          typewriterElement.textContent = textToType.substring(0, charIndex + 1);
+          charIndex++;
+
+          if (charIndex === textToType.length) {
+            // Reached the end, pause before deleting
+            isDeleting = true;
+            setTimeout(loopTypewriter, 2500); 
+            return;
+          }
+          setTimeout(loopTypewriter, 45); // Typing speed
+        } else {
+          // Deleting backwards
+          typewriterElement.textContent = textToType.substring(0, charIndex - 1);
+          charIndex--;
+
+          if (charIndex === 0) {
+            // Fully deleted, pause before typing again
+            isDeleting = false;
+            setTimeout(loopTypewriter, 1000); 
+            return;
+          }
+          setTimeout(loopTypewriter, 20); // Deleting speed (faster)
+        }
+      }
+
+      // Start typing after the intro overlay fades out (4s wait + 1s fade)
+      setTimeout(loopTypewriter, 4500);
+    });
+  </script>
+
+</body>
+</html>
